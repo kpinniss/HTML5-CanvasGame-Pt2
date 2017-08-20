@@ -49,8 +49,10 @@ class Game{
         this.enemy.ctx.fillStyle = this.enemy.color;
         this.enemy.ctx.fillRect(this.enemy.x, this.enemy.y, this.enemy.width, this.enemy.height);
         this.checkGameArea();
+        this.checkForenemy(this.gameobject,this.enemy);
+        this.enemeyMovment(this.enemy);
     }
-
+    //check for game area border
     checkGameArea(){
         if(this.gameobject.x >= this.gameArea.canvas.width - this.gameobject.width){
             this.gameobject.x = this.gameArea.canvas.width - this.gameobject.width;
@@ -65,11 +67,49 @@ class Game{
             this.gameobject.y = 0;
         }
     }
-    //check for enemy collsion
-    checkForenemy(){
-        
+
+    enemeyMovment(enemy){
+        enemy.x += 5
+        if(enemy.x >= this.gameArea.canvas.width - enemy.width){
+            enemy.x = 0;
+        }
     }
 
+    //check for enemy collsion
+    checkForenemy(player,enemy){
+        var space = 30;
+        var rangeStartY = enemy.y - enemy.height;
+        var rangeEndY = enemy.y + enemy.height
+        var enemyAreaY = this.getRange(rangeStartY,rangeEndY);
+        var rangeStartX = enemy.x - enemy.width;
+        var rangeEndX = enemy.x + enemy.width;
+        var enemyAreaX = this.getRange(rangeStartX,rangeEndX);
+        
+       if(player.x == enemy.x - player.width && enemyAreaY.indexOf(player.y) !== -1){
+           player.x -= space;
+       }
+       if(player.x == enemy.x + player.width && enemyAreaY.indexOf(player.y) !== -1){
+        player.x += space;
+       }
+       if(player.y == enemy.y + player.height && enemyAreaX.indexOf(player.x) !== -1){
+        player.y += space;
+       }
+       if(player.y == enemy.y - player.height && enemyAreaX.indexOf(player.x) !== -1){
+        player.y -= space;
+       }
+
+    }
+
+    getRange(start, end)
+    {
+        var numbers = [];
+        for (; start <= end; start++)
+        {
+            numbers.push(start);
+        }
+        return numbers;
+    }
+    //player controlls
     playerController(){
     if (event.keyCode == 37 || event.keyCode == 65) {
         this.gameobject.x -= 10;
@@ -86,7 +126,7 @@ class Game{
     }
     }
 }
-
+//enemy class 
 class Enemy extends GameObject{
     constructor(width, height, color, x ,y, gameArea){
         super(width, height, color, x ,y, gameArea);
@@ -101,9 +141,9 @@ class Enemy extends GameObject{
 function startGame(){
     
    var gameArea = new GameArea(550, 350,"lightBlue");
-var player = new GameObject(50,50,"blue",20,20,gameArea);
+   var player = new GameObject(50,50,"blue",20,20,gameArea);
 
-   var enemy = new Enemy(50,50,"red",70,20,gameArea);
+   var enemy = new Enemy(50,50,"red",70,70,gameArea);
    
    console.log(enemy);
    var game = new Game(gameArea, player,enemy);
