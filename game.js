@@ -26,10 +26,10 @@ class GameObject{
 }
 
 class Game{
-    constructor(gameArea, gameobject, enemy){
+    constructor(gameArea, gameobject, enemies){
         this.gameArea = gameArea;
         this.gameobject = gameobject;
-        this.enemy = enemy;
+        this.enemies = enemies;
         console.log(this.gameobject);
         setInterval((update)=>{this.update();}, 20);
         document.addEventListener('keydown', (event)=>{
@@ -45,12 +45,16 @@ class Game{
         this.gameobject.ctx.fillStyle = this.gameobject.color;
         this.gameobject.ctx.fillRect(this.gameobject.x, this.gameobject.y, this.gameobject.width, this.gameobject.height);
         //update senemy
-        this.enemy.ctx = this.gameArea.context;
-        this.enemy.ctx.fillStyle = this.enemy.color;
-        this.enemy.ctx.fillRect(this.enemy.x, this.enemy.y, this.enemy.width, this.enemy.height);
-        this.checkGameArea();
-        this.checkForenemy(this.gameobject,this.enemy);
-        this.enemeyMovment(this.enemy);
+        for(var i =0; i < this.enemies.length; i++){
+            var enemy = this.enemies[i];
+            enemy.ctx = this.gameArea.context;
+            enemy.ctx.fillStyle = enemy.color;
+            enemy.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            this.checkGameArea();
+            this.checkForenemy(this.gameobject,enemy);
+            this.enemeyMovment(enemy);
+        }
+       
     }
     //check for game area border
     checkGameArea(){
@@ -69,7 +73,8 @@ class Game{
     }
 
     enemeyMovment(enemy){
-        enemy.x += 5
+        var speed = Math.floor(Math.random() * 5 + 1)
+        enemy.x += speed;
         if(enemy.x >= this.gameArea.canvas.width - enemy.width){
             enemy.x = 0;
         }
@@ -143,10 +148,13 @@ function startGame(){
    var gameArea = new GameArea(550, 350,"lightBlue");
    var player = new GameObject(50,50,"blue",20,20,gameArea);
 
-   var enemy = new Enemy(50,50,"red",70,70,gameArea);
-   
-   console.log(enemy);
-   var game = new Game(gameArea, player,enemy);
+   var enemy1 = new Enemy(50,50,"red",70,70,gameArea);
+   var enemy2 = new Enemy(50,50,"yellow",34,88,gameArea);
+   var enemy3 = new Enemy(50,50,"green",100,100,gameArea);
+   var enemy4 = new Enemy(50,50,"pink",2,50,gameArea);
+   var enemy5 = new Enemy(50,50,"orange",30,111,gameArea);
+   var enemies = [enemy1, enemy2, enemy3,enemy4,enemy5];
+   var game = new Game(gameArea, player,enemies);
 }
 
 
